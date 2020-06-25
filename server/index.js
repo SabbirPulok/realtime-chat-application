@@ -7,14 +7,32 @@ const http = require('http');
 const server = http.createServer(app);
 const io = socketio(server);
 
+const {addUser, removeUser, getUser, getUsersInRoom} = require('./users');
+
 const PORT = process.env.port || 5000;
+const router = require('./router');
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(router);
 
-// app.get('/',(req,res)=>{
-//     res.send('Thank You!');
-// })
+io.on('connection',(socket)=>{
 
-// app.listen(4000,()=>console.log("Listening to port 4000"));
+    socket.on('join', ({name,room},callback)=>{
+        
+        const {error,user} = addUser({id:socket.id,name,room})
+
+        if(error)
+        {
+            return callback(error);
+        }
+        socket.emit('message',{user:'admin', text: `${user.name}, Welcome to the room ${user.room}`});
+        socket.join(user.room);
+    })
+
+    socket.on('disconnect',()=>{
+        console.log("User had left us.");
+    })
+})
+
 server.listen(PORT, ()=>console.log(`Server has started on port ${PORT}`));
