@@ -1,14 +1,16 @@
 const users = [];
 
-const addUser = ({id,name,room})=>{
+const addUser = ( {id,name,room} )=>{
+
+    console.log("Users: ",room, name);
     name = name.trim().toLowerCase();
     room = room.trim().toLowerCase();
-
-    const existingUser = users.find((user)=> user.room === room && user.id ===id);
     
+    const existingUser = users.find(user=> user.room === room && user.id ===id);
+
     if(existingUser)
     {
-        return ({error: 'Username is taken.'})
+        return ({error: 'Username is taken.'});
     }
 
     const user = {id,name,room};
@@ -17,11 +19,11 @@ const addUser = ({id,name,room})=>{
 }
 
 const removeUser = (id)=>{
-    const index = users.findIndex(users.id === id);
+    const index = users.findIndex(user => user.id === id);
 
     if(index!=-1)
     {
-        return user.splice(index,1)[0]
+        return users.splice(index,1)[0];
     }
 }
 
